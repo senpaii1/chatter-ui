@@ -1,26 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  Container,
+  createTheme,
+  CssBaseline,
+  Grid,
+  ThemeProvider,
+} from "@mui/material";
+import { RouterProvider } from "react-router-dom";
+import router from "./components/Routes";
+import { ApolloProvider } from "@apollo/client";
+import client from "./constants/apollo-client";
+import Guard from "./components/auth/Guard";
+import Header from "./components/header/Header";
+import Snackbar from "./components/snackbar/Snackbar";
+import ChatList from "./components/chat-list/Chat.list";
+import { usePath } from "./hooks/usePath";
 
-function App() {
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
+
+const App = () => {
+  const { path } = usePath();
+
+  const showChatList = path === "/" || path.includes("chats");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Header />
+        <Guard>
+          <Container maxWidth="xl" sx={{ marginTop: "1rem" }}>
+            {showChatList ? (
+              <Grid container spacing={5}>
+                <Grid item xs={12} md={5} lg={4} xl={3}>
+                  <ChatList />
+                </Grid>
+                <Grid item xs={12} md={7} lg={8} xl={9}>
+                  <Routes />
+                </Grid>
+              </Grid>
+            ) : (
+              <Routes />
+            )}
+          </Container>
+        </Guard>
+        <Snackbar />
+      </ThemeProvider>
+    </ApolloProvider>
   );
-}
+};
+
+const Routes = () => {
+  return (
+    <Container sx={{ height: "100%" }}>
+      <RouterProvider router={router} />
+    </Container>
+  );
+};
 
 export default App;
