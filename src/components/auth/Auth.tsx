@@ -26,7 +26,6 @@ const Auth = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { data, error: gqlError } = useGetMe();
-  console.log(data);
   const navigate = useNavigate();
 
   useEffect(() => {
