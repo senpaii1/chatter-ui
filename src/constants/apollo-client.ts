@@ -70,7 +70,7 @@ const client = new ApolloClient({
       },
     },
   }),
-  link: logoutLink.concat(authLink.concat(splitLink)),
+  link: logoutLink.concat(authLink).concat(splitLink),
 });
 
 function merge(existing: any, incoming: any, { args }: any) {
